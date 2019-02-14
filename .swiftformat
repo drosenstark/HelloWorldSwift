@@ -1,0 +1,5 @@
+# file options
+--exclude  /../store-generator, /../scripts, /../APIKit-1.2.1, /**/Pods, /**/*StateMachine.swift
+
+# disable rules
+--disable strongOutlets
