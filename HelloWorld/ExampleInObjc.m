@@ -7,6 +7,7 @@
 @end
 
 @implementation ExampleInObjc
+@synthesize someOtherString = _someOtherString;
 
 + (void) doSomethingClass {}
 
@@ -20,8 +21,8 @@
     _someOtherString = someOtherString;
 }
 
-//-(NSString *)someOtherString {
-//    return _someOtherString;
-//}
+-(NSString *)someOtherString {
+    return _someOtherString;
+}
 
 @end
