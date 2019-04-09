@@ -4,6 +4,7 @@ import Nimble
 import Kiwi
 
 class ExampleInSwiftSpec: QuickSpec {
+    var resultClassMethod: String = ""
     var result: String = ""
 
     override func spec() {
@@ -13,8 +14,6 @@ class ExampleInSwiftSpec: QuickSpec {
 
             beforeEach {
                 subject = ExampleInSwift()
-                ExampleInObjc().doSomething()
-                ExampleInObjc.stub(#selector(ExampleInObjc.doSomethingClass))
                 objC.stub(#selector(ExampleInObjc.doSomething)) { _ in
                     self.result = "yeah"
                     return nil
@@ -25,6 +24,20 @@ class ExampleInSwiftSpec: QuickSpec {
                     subject.doSomething(example: objC)
                     expect(subject.didSomething) == true
                     expect(self.result) == "yeah"
+                }
+            }
+
+            context("when calling class method") {
+                beforeEach {
+                    ExampleInObjc.stub(#selector(ExampleInObjc.doSomethingClass)) { _ in
+                        self.resultClassMethod = "yes"
+                        return nil
+                    }
+                }
+
+                it("calls the stubbed method") {
+                    ExampleInObjc.doSomethingClass()
+                    expect(self.resultClassMethod) == "yes"
                 }
             }
         }
