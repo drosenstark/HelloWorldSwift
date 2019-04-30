@@ -10,5 +10,5 @@ end
 target 'HelloWorldTests' do
   pod 'Quick'
   pod 'Nimble'
-  pod 'Kiwi'
+  pod 'OCMock'
 end
