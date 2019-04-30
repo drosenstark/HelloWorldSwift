@@ -18,6 +18,7 @@
 		DB3AD29C2215FF0C0060C256 /* ExampleInObjc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB3AD29B2215FF0C0060C256 /* ExampleInObjc.m */; };
 		DB3AD29E221600200060C256 /* ExampleInSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3AD29D221600200060C256 /* ExampleInSwift.swift */; };
 		DB51E47F221601A600771DFC /* ExampleSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB51E47E221601A600771DFC /* ExampleSpec.swift */; };
+		DBAAA6DC2278E6FF007FA7F8 /* TestInObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = DBAAA6DB2278E6FF007FA7F8 /* TestInObjC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,8 @@
 		DB3AD29B2215FF0C0060C256 /* ExampleInObjc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleInObjc.m; sourceTree = "<group>"; };
 		DB3AD29D221600200060C256 /* ExampleInSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleInSwift.swift; sourceTree = "<group>"; };
 		DB51E47E221601A600771DFC /* ExampleSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleSpec.swift; sourceTree = "<group>"; };
+		DBAAA6DA2278E6FE007FA7F8 /* HelloWorldTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HelloWorldTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		DBAAA6DB2278E6FF007FA7F8 /* TestInObjC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestInObjC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +140,8 @@
 				DB3AD28E2215FE780060C256 /* HelloWorldTests.swift */,
 				DB3AD2902215FE780060C256 /* Info.plist */,
 				DB51E47E221601A600771DFC /* ExampleSpec.swift */,
+				DBAAA6DB2278E6FF007FA7F8 /* TestInObjC.m */,
+				DBAAA6DA2278E6FE007FA7F8 /* HelloWorldTests-Bridging-Header.h */,
 			);
 			path = HelloWorldTests;
 			sourceTree = "<group>";
@@ -199,6 +204,7 @@
 					};
 					DB3AD2892215FE780060C256 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 						TestTargetID = DB3AD2752215FE760060C256;
 					};
 				};
@@ -354,6 +360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB3AD28F2215FE780060C256 /* HelloWorldTests.swift in Sources */,
+				DBAAA6DC2278E6FF007FA7F8 /* TestInObjC.m in Sources */,
 				DB51E47F221601A600771DFC /* ExampleSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -552,6 +559,7 @@
 			baseConfigurationReference = A14061AF7D7BC2787F2A35C3 /* Pods-HelloWorldTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S63H2E63G5;
 				INFOPLIST_FILE = HelloWorldTests/Info.plist;
@@ -562,6 +570,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.shopkeep.HelloWorldTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "HelloWorldTests/HelloWorldTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HelloWorld.app/HelloWorld";
@@ -573,6 +583,7 @@
 			baseConfigurationReference = 0D3327C52EE33E3C6E1CEAC9 /* Pods-HelloWorldTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S63H2E63G5;
 				INFOPLIST_FILE = HelloWorldTests/Info.plist;
@@ -583,6 +594,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.shopkeep.HelloWorldTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "HelloWorldTests/HelloWorldTests-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HelloWorld.app/HelloWorld";

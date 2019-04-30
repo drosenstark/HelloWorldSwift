@@ -6,6 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void) doSomethingClass;
 - (void) doSomething;
+- (void) processArgument:(NSString*)someArg;
 
 @end
 
