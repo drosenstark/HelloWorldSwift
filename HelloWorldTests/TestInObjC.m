@@ -12,7 +12,7 @@
 - (void)testStubbingWithKiwiExamples {
     ExampleInObjc *stubMe = [[ExampleInObjc alloc] init];
     [stubMe stub:@selector(doSomething) andReturn:nil];
-
+\
     [stubMe doSomething];
 
     [stubMe stub:@selector(processArgument:) andReturn:nil];
