@@ -2,6 +2,8 @@ import UIKit
 
 class RootTableViewController: UITableViewController {
 
+    var vcClasses = [GreenVC.self]
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "id")
@@ -23,19 +25,20 @@ class RootTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return vcClasses.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "id", for: indexPath)
         if indexPath.row == 0 {
-            cell.textLabel?.text = "That Green VC"
+            cell.textLabel?.text = "\(vcClasses[indexPath.row])"
         }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "green", sender: nil)
+        let vc = vcClasses[indexPath.row].init()
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     /*
