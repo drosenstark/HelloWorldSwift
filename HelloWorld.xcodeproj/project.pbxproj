@@ -18,6 +18,7 @@
 		DB3AD29C2215FF0C0060C256 /* ExampleInObjc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB3AD29B2215FF0C0060C256 /* ExampleInObjc.m */; };
 		DB3AD29E221600200060C256 /* ExampleInSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3AD29D221600200060C256 /* ExampleInSwift.swift */; };
 		DB51E47F221601A600771DFC /* ExampleSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB51E47E221601A600771DFC /* ExampleSpec.swift */; };
+		DB8E079A22A05D8900D6FFCD /* blah.html in Resources */ = {isa = PBXBuildFile; fileRef = DB8E079922A05D8900D6FFCD /* blah.html */; };
 		DBAAA6DC2278E6FF007FA7F8 /* TestInObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = DBAAA6DB2278E6FF007FA7F8 /* TestInObjC.m */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,7 @@
 		DB3AD29B2215FF0C0060C256 /* ExampleInObjc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleInObjc.m; sourceTree = "<group>"; };
 		DB3AD29D221600200060C256 /* ExampleInSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleInSwift.swift; sourceTree = "<group>"; };
 		DB51E47E221601A600771DFC /* ExampleSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleSpec.swift; sourceTree = "<group>"; };
+		DB8E079922A05D8900D6FFCD /* blah.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = blah.html; sourceTree = "<group>"; };
 		DBAAA6DA2278E6FE007FA7F8 /* HelloWorldTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HelloWorldTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		DBAAA6DB2278E6FF007FA7F8 /* TestInObjC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestInObjC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,6 +132,7 @@
 				DB3AD2822215FE780060C256 /* LaunchScreen.storyboard */,
 				DB3AD27D2215FE770060C256 /* Main.storyboard */,
 				DB3AD27B2215FE770060C256 /* ViewController.swift */,
+				DB8E079922A05D8900D6FFCD /* blah.html */,
 			);
 			path = HelloWorld;
 			sourceTree = "<group>";
@@ -236,6 +239,7 @@
 				DB3AD2842215FE780060C256 /* LaunchScreen.storyboard in Resources */,
 				DB3AD2812215FE780060C256 /* Assets.xcassets in Resources */,
 				DB3AD27F2215FE770060C256 /* Main.storyboard in Resources */,
+				DB8E079A22A05D8900D6FFCD /* blah.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
