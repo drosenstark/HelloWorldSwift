@@ -1,7 +1,7 @@
 @testable import HelloWorld
-import Quick
-import Nimble
 import Kiwi
+import Nimble
+import Quick
 
 class ExampleInSwiftSpec: QuickSpec {
     var resultClassMethod: String = ""
