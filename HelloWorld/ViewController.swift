@@ -3,17 +3,18 @@ import WebKit
 
 class ViewController: UIViewController {
 
-    let ruleList = RuleList()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .green
-        ExampleInSwift().doSomething(example: ExampleInObjc())
 
         let contentController = WKUserContentController();
-        contentController.add(ruleList, name: "whatever")
-
+        let dirtyStateHandler = DirtyStateHandler { (dirty) in
+            print("dirty state changed \(dirty)")
+        }
+        dirtyStateHandler.add(to: contentController)
         let config = WKWebViewConfiguration()
+
         config.userContentController = contentController
 
         let webView = SomeWebView(frame: .zero, configuration: config)
@@ -27,23 +28,23 @@ class ViewController: UIViewController {
         webView.loadFileURL(url, allowingReadAccessTo: url)
         let request = URLRequest(url: url)
         webView.load(request)
-
-        ruleList.callback = {
-            webView.removeFromSuperview()
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            webView.evaluateJavaScript("whatever()", completionHandler: nil)
-        }
     }
 }
 
-class RuleList: WKContentRuleList, WKScriptMessageHandler {
+class DirtyStateHandler: WKContentRuleList, WKScriptMessageHandler {
+    private let handleDirtyChange: ((Bool)->())!
 
-    var callback: (()->())!
+    init(handleDirtyChange: @escaping (Bool)->Void) {
+        self.handleDirtyChange = handleDirtyChange
+    }
+
+    func add(to contentController: WKUserContentController) {
+        contentController.add(self, name: "setDirty")
+    }
+
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print("got a message \(message)")
-        callback()
+        let dirtyState = message.body as? Int == 1
+        handleDirtyChange(dirtyState)
     }
 }
 

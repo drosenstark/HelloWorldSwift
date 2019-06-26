@@ -1,11 +1,12 @@
 <html>
     <script>
-    console.log("whatever");
-    document.write("hello there!");
-
-    function whatever() { document.write("whatever was called, thank you!"); }
+    function setDirty(dirtyState) {
+        webkit.messageHandlers.setDirty.postMessage(dirtyState);
+    }
     </script>
     Hello!
-    <input type="button" value="Click me" onclick="document.write('called whatever');whatever();">
-    <input type="button" value="Click me 2" onclick="webkit.messageHandlers.whatever.postMessage('whatever');">
+    <body>
+    <input type="button" value="Set Dirty to True" onclick="setDirty(true)">
+    <input type="button" value="Set Dirty to False" onclick="setDirty(false)">
+    </body>
 </html>
