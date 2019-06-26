@@ -6,8 +6,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         let contentController = WKUserContentController()
-        let dirtyStateHandler = DirtyStateHandler { dirty in
-            print("dirty state changed \(dirty)")
+        let dirtyStateHandler = NeedsSaveStateHandler { needsSave in
+            print("needsSave state changed \(needsSave)")
         }
         dirtyStateHandler.add(to: contentController)
         let config = WKWebViewConfiguration()
@@ -27,24 +27,24 @@ class ViewController: UIViewController {
     }
 }
 
-class DirtyStateHandler: WKContentRuleList, WKScriptMessageHandler {
-    private let handleDirtyChange: ((Bool) -> Void)!
+class NeedsSaveStateHandler: WKContentRuleList, WKScriptMessageHandler {
+    private let handleNeedsSaveStateChange: ((Bool) -> Void)!
 
-    init(handleDirtyChange: @escaping (Bool) -> Void) {
-        self.handleDirtyChange = handleDirtyChange
+    init(handleNeedsSaveStateChange: @escaping (Bool) -> Void) {
+        self.handleNeedsSaveStateChange = handleNeedsSaveStateChange
     }
 
     func add(to contentController: WKUserContentController) {
-        contentController.add(self, name: "setDirty")
+        contentController.add(self, name: "setNeedsSave")
 
-        let script = "function setEmbeddedDirtyState(dirty) { webkit.messageHandlers.setDirty.postMessage(dirty); }"
+        let script = "function setEmbeddedNeedsSaveState(needsSave) { webkit.messageHandlers.setNeedsSave.postMessage(needsSave); }"
         let userScript = WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: true)
         contentController.addUserScript(userScript)
     }
 
     func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
-        let dirtyState = message.body as? Int == 1
-        handleDirtyChange(dirtyState)
+        let needsSave = message.body as? Int == 1
+        handleNeedsSaveStateChange(needsSave)
     }
 }
 
