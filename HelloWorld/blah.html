@@ -1,12 +1,7 @@
 <html>
-    <script>
-    function setDirty(dirtyState) {
-        webkit.messageHandlers.setDirty.postMessage(dirtyState);
-    }
-    </script>
     Hello!
     <body>
-    <input type="button" value="Set Dirty to True" onclick="setDirty(true)">
-    <input type="button" value="Set Dirty to False" onclick="setDirty(false)">
+    <input type="button" value="Set Dirty to True" onclick="setEmbeddedDirtyState(true)">
+    <input type="button" value="Set Dirty to False" onclick="setEmbeddedDirtyState(false)">
     </body>
 </html>
