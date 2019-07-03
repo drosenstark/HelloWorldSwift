@@ -2,13 +2,13 @@ PODS:
   - Kiwi (3.0.0)
   - Nimble (8.0.1)
   - Quick (2.1.0)
-  - RxSwift (5.0.0)
+  - RxSwift (4.5.0)
 
 DEPENDENCIES:
   - Kiwi
   - Nimble
   - Quick
-  - RxSwift
+  - RxSwift (~> 4.5)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -21,8 +21,8 @@ SPEC CHECKSUMS:
   Kiwi: fbeafef0f00e4d8f7dcb3420a4930afe70af77f7
   Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
-  RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
+  RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
 
-PODFILE CHECKSUM: af701e28c80b50ab1f5470f9ec0ec5f63a17859d
+PODFILE CHECKSUM: b77a52de99d36100aabef59632293177d75268ac
 
 COCOAPODS: 1.6.1

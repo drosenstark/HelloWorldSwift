@@ -4,7 +4,7 @@ use_frameworks!
 platform :ios, '12.1'
 
 target 'HelloWorld' do
-  pod 'RxSwift'
+  pod 'RxSwift', '~> 4.5'
 end
 
 target 'HelloWorldTests' do

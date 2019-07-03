@@ -5,15 +5,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let contentController = WKUserContentController()
         let dirtyStateHandler = NeedsSaveStateHandler { needsSave in
             print("needsSave state changed \(needsSave)")
         }
-        dirtyStateHandler.add(to: contentController)
-        let config = WKWebViewConfiguration()
-        config.userContentController = contentController
 
-        let webView = SomeWebView(frame: .zero, configuration: config)
+        let webView = SomeWebView(frame: .zero)
+        dirtyStateHandler.add(to: webView.configuration.userContentController)
 
         webView.frame = view.bounds
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
