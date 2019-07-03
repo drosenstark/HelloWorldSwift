@@ -2,6 +2,9 @@ import UIKit
 import WebKit
 
 class ViewController: UIViewController {
+
+    @IBOutlet weak var webView: WKWebView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -9,7 +12,6 @@ class ViewController: UIViewController {
             print("needsSave state changed \(needsSave)")
         }
 
-        let webView = SomeWebView(frame: .zero)
         dirtyStateHandler.add(to: webView.configuration.userContentController)
 
         webView.frame = view.bounds
@@ -20,6 +22,9 @@ class ViewController: UIViewController {
         webView.loadFileURL(url, allowingReadAccessTo: url)
         let request = URLRequest(url: url)
         webView.load(request)
+    }
+
+    @IBAction func navToReceiptSettings(_ sender: Any) {
     }
 }
 
@@ -44,4 +49,3 @@ class NeedsSaveStateHandler: WKContentRuleList, WKScriptMessageHandler {
     }
 }
 
-class SomeWebView: WKWebView {}
