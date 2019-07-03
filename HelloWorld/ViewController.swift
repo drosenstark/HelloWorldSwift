@@ -11,7 +11,6 @@ class ViewController: UIViewController {
         }
         dirtyStateHandler.add(to: contentController)
         let config = WKWebViewConfiguration()
-
         config.userContentController = contentController
 
         let webView = SomeWebView(frame: .zero, configuration: config)
