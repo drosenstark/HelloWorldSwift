@@ -6,9 +6,7 @@ class ViewController: UIViewController {
     // CRITICAL! If this is dealloc'ed the whole thing doesn't work
     var adapter: ListAdapter!
 
-    lazy var strings: [NSString] = { ["Foo", "Bar", "Biz", "Foo2", "Bar2", "Biz2"].map {
-        $0 as NSString
-    } }()
+    var strings = ["Foo", "Bar", "Biz", "Foo2", "Bar2", "Biz2"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +24,7 @@ class ViewController: UIViewController {
 
 extension ViewController: ListAdapterDataSource {
     func objects(for _: ListAdapter) -> [ListDiffable] {
-        return strings
+        return strings as [NSString]
     }
 
     func listAdapter(_: ListAdapter, sectionControllerFor _: Any) -> ListSectionController {
