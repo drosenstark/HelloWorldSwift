@@ -3,17 +3,24 @@ import UIKit
 
 class ViewController: UIViewController {
     @IBOutlet var collectionView: UICollectionView!
+    // CRITICAL! If this is dealloc'ed the whole thing doesn't work
+    var adapter: ListAdapter!
+
     lazy var strings: [NSString] = { ["Foo", "Bar", "Biz", "Foo2", "Bar2", "Biz2"].map {
         $0 as NSString
     } }()
-    let updater = ListAdapterUpdater()
-    var adapter: ListAdapter!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let updater = ListAdapterUpdater()
         adapter = ListAdapter(updater: updater, viewController: self, workingRangeSize: 0)
         adapter.collectionView = collectionView
         adapter.dataSource = self
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.strings = self.strings.filter { !$0.contains("Bar")}
+            self.adapter.performUpdates(animated: true, completion: nil)
+        }
     }
 }
 
