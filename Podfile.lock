@@ -1,10 +1,14 @@
 PODS:
+  - IGListDiffKit (4.0.0)
+  - IGListKit (4.0.0):
+    - IGListDiffKit (= 4.0.0)
   - Kiwi (3.0.0)
   - Nimble (8.0.4)
   - Quick (2.2.0)
   - RxSwift (5.0.1)
 
 DEPENDENCIES:
+  - IGListKit
   - Kiwi
   - Nimble
   - Quick
@@ -12,17 +16,21 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - IGListDiffKit
+    - IGListKit
     - Kiwi
     - Nimble
     - Quick
     - RxSwift
 
 SPEC CHECKSUMS:
+  IGListDiffKit: 665d6cf43ce726e676013db9c7d6c4294259b6b2
+  IGListKit: fd5a5d21935298f5849fa49d426843cff97b77c7
   Kiwi: fbeafef0f00e4d8f7dcb3420a4930afe70af77f7
   Nimble: 18d5360282923225d62b09d781f63abc1a0111fc
   Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
   RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
 
-PODFILE CHECKSUM: af701e28c80b50ab1f5470f9ec0ec5f63a17859d
+PODFILE CHECKSUM: 3b108f31bffde2c5a659ae2563a64533acc5c8d5
 
 COCOAPODS: 1.6.1

@@ -5,6 +5,7 @@ platform :ios, '12.1'
 
 target 'HelloWorld' do
   pod 'RxSwift'
+  pod 'IGListKit'
 end
 
 target 'HelloWorldTests' do
