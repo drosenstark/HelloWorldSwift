@@ -11,12 +11,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let updater = ListAdapterUpdater()
-        adapter = ListAdapter(updater: updater, viewController: self, workingRangeSize: 0)
+        adapter = ListAdapter(updater: updater, viewController: self)
         adapter.collectionView = collectionView
         adapter.dataSource = self
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.strings = self.strings.filter { !$0.contains("Bar")}
+            self.strings = self.strings.filter { !$0.contains("Bar") }
             self.adapter.performUpdates(animated: true, completion: nil)
         }
     }
@@ -31,18 +31,13 @@ extension ViewController: ListAdapterDataSource {
         return LabelSectionController()
     }
 
-    func emptyView(for _: ListAdapter) -> UIView? {
-        let emptyView = UIView()
-        emptyView.backgroundColor = .yellow
-        return emptyView
-    }
+    func emptyView(for _: ListAdapter) -> UIView? { return nil }
 }
 
 class LabelSectionController: ListSectionController {
     private var object: String?
 
     override func numberOfItems() -> Int {
-        print("NumberOfItems for obj=\(object!)")
         return 1
     }
 
@@ -55,18 +50,15 @@ class LabelSectionController: ListSectionController {
         guard let cell = collectionContext?.dequeueReusableCell(of: UICollectionViewCell.self, for: self, at: index) else {
             fatalError()
         }
-        cell.contentView.backgroundColor = .purple
-        let subviews = cell.contentView.subviews
-        for subview in subviews {
-            subview.removeFromSuperview()
+        let label: UILabel
+        if let existingLabel = cell.contentView.subviews.first as? UILabel {
+            label = existingLabel
+        } else {
+            label = UILabel(frame: cell.contentView.bounds)
+            label.textAlignment = .center
+            cell.contentView.addSubview(label)
         }
-        let label = UILabel(frame: cell.contentView.bounds)
-        label.textAlignment = .center
-
-        cell.contentView.addSubview(label)
         label.text = object
-        label.backgroundColor = .orange
-        label.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         return cell
     }
 
