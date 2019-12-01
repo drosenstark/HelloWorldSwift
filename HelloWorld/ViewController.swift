@@ -5,11 +5,26 @@ class ViewController: UIViewController {
     @IBOutlet var collectionView: UICollectionView!
     // CRITICAL! If this is dealloc'ed the whole thing doesn't work
     var adapter: ListAdapter!
+    var isChild = false
     
-    var strings = ["Foo", "Bar", "Biz", "Child", "Foo2", "Bar2", "Biz2", "Foo3", "Bar3", "Biz3", "Foo4", "Bar4", "Biz4"]
+    lazy var strings:[String] = {
+        var strings = [String]()
+        for i in 0..<25 {
+            strings.append("What \(i+1)")
+        }
+        if !isChild {
+            strings.insert("Child", at: 3)
+        }
+        return strings
+    }()
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if let flow = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            flow.scrollDirection = isChild ? .horizontal : .vertical
+        }
+
         let updater = ListAdapterUpdater()
         adapter = ListAdapter(updater: updater, viewController: self)
         adapter.collectionView = collectionView
@@ -21,11 +36,15 @@ class ViewController: UIViewController {
 //            collectionView.collectionViewLayout = flow
 //            flow.invalidateLayout()
 //        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.strings = self.strings.filter { !$0.contains("Bar") }
-            self.adapter.performUpdates(animated: true, completion: nil)
-        }
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+//            if !self.isChild {
+//                self.strings = self.strings.filter { !$0.contains("What 8") }
+//                self.strings = self.strings.filter { !$0.contains("What 7") }
+//                self.strings = self.strings.filter { !$0.contains("What 10") }
+//                self.adapter.performUpdates(animated: true, completion: nil)
+//            }
+//        }
     }
 }
 
@@ -41,13 +60,16 @@ extension ViewController: ListAdapterDataSource {
             let result = LabelSectionController()
             if let flow = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
                 result.isHorizontal = flow.scrollDirection == .horizontal
-                print("is horiz \(result.isHorizontal)")
             }
             return result
         }
     }
 
-    func emptyView(for _: ListAdapter) -> UIView? { return nil }
+    func emptyView(for _: ListAdapter) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = .orange
+        return view
+    }
 }
 
 class LabelSectionController: ListSectionController {
@@ -89,18 +111,9 @@ class LabelSectionController: ListSectionController {
     }
 }
 
-// MARK: - Second VC with CollectionView Inside
-
-class VC2: UIViewController {
-    
-    override func viewDidLoad() {
-        view.backgroundColor = .magenta
-    }
-}
-
 class OtherSectionController: ListSectionController {
     private var object: String?
-//    var vc2: ViewController!
+    var vc2: ViewController!
 
     override init() {
     }
@@ -115,7 +128,7 @@ class OtherSectionController: ListSectionController {
     }
 
     override func cellForItem(at index: Int) -> UICollectionViewCell {
-        guard let cell = collectionContext?.dequeueReusableCell(of: UICollectionViewCell.self, for: self, at: index) else {
+        guard let cell = collectionContext?.dequeueReusableCell(of: AnotherCollectionCellView.self, for: self, at: index) else {
             fatalError()
         }
         // um why is it dequeueing from the other guys queue?
@@ -123,18 +136,12 @@ class OtherSectionController: ListSectionController {
         cell.contentView.backgroundColor = .orange
         
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let vc2 = storyboard.instantiateViewController(withIdentifier: "vc") as! ViewController
-        vc2.strings = vc2.strings.filter { !$0.contains("Child") }
-        print("vc2 strings \(vc2.strings)")
+        vc2 = storyboard.instantiateViewController(withIdentifier: "vc") as? ViewController
+        vc2.isChild = true
         let _ = vc2.view
-        if let flow = vc2.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            flow.scrollDirection = .horizontal
-        }
-
         cell.contentView.addSubview(vc2.view)
 
         vc2.view.backgroundColor = .blue
-        print("vc2 superview \(vc2.view.superview) \(index)")
         vc2.view.frame = cell.contentView.bounds
         vc2.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         return cell
@@ -144,4 +151,8 @@ class OtherSectionController: ListSectionController {
         print("did update only on child right? \(object)")
         self.object = String(describing: object)
     }
+}
+
+class AnotherCollectionCellView: UICollectionViewCell {
+    
 }
