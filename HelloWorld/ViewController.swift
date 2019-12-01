@@ -37,14 +37,14 @@ class ViewController: UIViewController {
 //            flow.invalidateLayout()
 //        }
         
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-//            if !self.isChild {
-//                self.strings = self.strings.filter { !$0.contains("What 8") }
-//                self.strings = self.strings.filter { !$0.contains("What 7") }
-//                self.strings = self.strings.filter { !$0.contains("What 10") }
-//                self.adapter.performUpdates(animated: true, completion: nil)
-//            }
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            if !self.isChild {
+                self.strings = self.strings.filter { !$0.contains("What 8") }
+                self.strings = self.strings.filter { !$0.contains("What 7") }
+                self.strings = self.strings.filter { !$0.contains("What 10") }
+                self.adapter.performUpdates(animated: true, completion: nil)
+            }
+        }
     }
 }
 
@@ -77,6 +77,12 @@ class LabelSectionController: ListSectionController {
 
     private var object: String?
 
+    override init() {
+        super.init()
+        self.inset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        print(self.hash)
+    }
+    
     override func numberOfItems() -> Int {
         return 1
     }
@@ -90,7 +96,8 @@ class LabelSectionController: ListSectionController {
     }
 
     override func cellForItem(at index: Int) -> UICollectionViewCell {
-        guard let cell = collectionContext?.dequeueReusableCell(of: UICollectionViewCell.self, for: self, at: index) else {
+        let clazz = isHorizontal ? HorizCollectionCellView.self : UICollectionViewCell.self
+        guard let cell = collectionContext?.dequeueReusableCell(of: clazz, for: self, at: index) else {
             fatalError()
         }
         let label: UILabel
@@ -154,5 +161,9 @@ class OtherSectionController: ListSectionController {
 }
 
 class AnotherCollectionCellView: UICollectionViewCell {
+    
+}
+
+class HorizCollectionCellView: UICollectionViewCell {
     
 }
