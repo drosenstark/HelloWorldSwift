@@ -5,7 +5,7 @@ class ViewController: UIViewController {
     @IBOutlet var collectionView: UICollectionView!
     // CRITICAL! If this is dealloc'ed the whole thing doesn't work
     var adapter: ListAdapter!
-    var datasource = ThatAdapter()
+    var datasource = ThatDataSource()
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -18,28 +18,31 @@ class ViewController: UIViewController {
         adapter = ListAdapter(updater: updater, viewController: self)
         adapter.collectionView = collectionView
         adapter.dataSource = datasource
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            let source = self.datasource
-
-            source.strings = source.strings.filter { !$0.contains("What 8") }
-            source.strings = source.strings.filter { !$0.contains("What 7") }
-            source.strings = source.strings.filter { !$0.contains("What 10") }
+            self.datasource.removeSomeStrings()
+            self.datasource.strings.insert("Child", at: 3)
             self.adapter.performUpdates(animated: true, completion: nil)
         }
     }
+    
 }
 
-class ThatAdapter: NSObject, ListAdapterDataSource {
+class ThatDataSource: NSObject, ListAdapterDataSource {
     var isChild = false
 
+    override init() {
+        super.init()
+    }
+ 
+    func removeSomeStrings() {
+        strings = self.strings.filter { !$0.contains("What 8") && !$0.contains("What 7") && !$0.contains("What 10") }
+    }
+    
     lazy var strings: [String] = {
         var strings = [String]()
         for i in 0 ..< 25 {
             strings.append("What \(i + 1)")
-        }
-        if !isChild {
-            strings.insert("Child", at: 3)
         }
         return strings
     }()
@@ -65,7 +68,7 @@ class ThatAdapter: NSObject, ListAdapterDataSource {
 
 class HorizontalLabelSectionController: LabelSectionController {
     override func sizeForItem(at _: Int) -> CGSize {
-        return CGSize(width: 65, height: collectionContext!.containerSize.height)
+        return CGSize(width: 75, height: collectionContext!.containerSize.height)
     }
 
     override func typeForCell() -> UICollectionViewCell.Type {
@@ -73,7 +76,7 @@ class HorizontalLabelSectionController: LabelSectionController {
     }
 
     override func backgroundColor() -> UIColor {
-        return .cyan
+        return .white
     }
 }
 
@@ -121,14 +124,14 @@ class LabelSectionController: ListSectionController {
     }
 
     func backgroundColor() -> UIColor {
-        return .systemPink
+        return .white
     }
 }
 
 class OtherSectionController: ListSectionController {
     // this is the crazy split... this thing is the adapter for the child collectionView
     var childAdapter: ListAdapter!
-    var childDatasource = ThatAdapter()
+    var childDatasource = ThatDataSource()
 
     private var object: String?
 
@@ -138,6 +141,11 @@ class OtherSectionController: ListSectionController {
         let updater = ListAdapterUpdater()
         childAdapter = ListAdapter(updater: updater, viewController: viewController!)
         childAdapter.dataSource = childDatasource
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.childDatasource.removeSomeStrings()
+            self.childAdapter.performUpdates(animated: true, completion: nil)
+        }
+        inset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
     }
 
     override func numberOfItems() -> Int {
