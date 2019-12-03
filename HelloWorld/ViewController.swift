@@ -57,11 +57,10 @@ extension ViewController: ListAdapterDataSource {
         if let object = object as? String, object.starts(with: "Child") {
             return OtherSectionController()
         } else {
-            let result = LabelSectionController()
-            if let flow = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-                result.isHorizontal = flow.scrollDirection == .horizontal
+            guard let flow = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+                fatalError()
             }
-            return result
+            return flow.scrollDirection == .horizontal ? HorizontalLabelSectionController() : LabelSectionController()
         }
     }
 
@@ -72,9 +71,21 @@ extension ViewController: ListAdapterDataSource {
     }
 }
 
-class LabelSectionController: ListSectionController {
-    var isHorizontal = false
+class HorizontalLabelSectionController: LabelSectionController {
+    override func sizeForItem(at _: Int) -> CGSize {
+        return CGSize(width: 65, height: collectionContext!.containerSize.height)
+    }
 
+    override func typeForCell() -> UICollectionViewCell.Type {
+        return HorizCollectionCellView.self
+    }
+
+    override func backgroundColor() -> UIColor {
+        return .cyan
+    }
+}
+
+class LabelSectionController: ListSectionController {
     private var object: String?
 
     override init() {
@@ -88,16 +99,11 @@ class LabelSectionController: ListSectionController {
     }
 
     override func sizeForItem(at _: Int) -> CGSize {
-        if isHorizontal {
-            return CGSize(width: 65, height: collectionContext!.containerSize.height)
-        } else {
-            return CGSize(width: collectionContext!.containerSize.width - 10, height: 65 - 10)
-        }
+        return CGSize(width: collectionContext!.containerSize.width - 10, height: 65 - 10)
     }
 
     override func cellForItem(at index: Int) -> UICollectionViewCell {
-        let clazz = isHorizontal ? HorizCollectionCellView.self : UICollectionViewCell.self
-        guard let cell = collectionContext?.dequeueReusableCell(of: clazz, for: self, at: index) else {
+        guard let cell = collectionContext?.dequeueReusableCell(of: typeForCell(), for: self, at: index) else {
             fatalError()
         }
         let label: UILabel
@@ -107,7 +113,7 @@ class LabelSectionController: ListSectionController {
             label = UILabel(frame: cell.contentView.bounds)
             label.textAlignment = .center
             cell.contentView.addSubview(label)
-            label.backgroundColor = isHorizontal ? .cyan : .systemPink
+            label.backgroundColor = backgroundColor()
         }
         label.text = object
         return cell
@@ -116,6 +122,17 @@ class LabelSectionController: ListSectionController {
     override func didUpdate(to object: Any) {
         self.object = String(describing: object)
     }
+    
+    // MARK: - Needs Override
+    
+    func typeForCell() -> UICollectionViewCell.Type {
+        return UICollectionViewCell.self
+    }
+    
+    func backgroundColor() -> UIColor {
+        return .systemPink
+    }
+
 }
 
 class OtherSectionController: ListSectionController {
