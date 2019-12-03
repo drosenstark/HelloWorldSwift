@@ -5,8 +5,35 @@ class ViewController: UIViewController {
     @IBOutlet var collectionView: UICollectionView!
     // CRITICAL! If this is dealloc'ed the whole thing doesn't work
     var adapter: ListAdapter!
-    var isChild = false
+    var datasource = ThatAdapter()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let flow = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            flow.scrollDirection = .vertical
+        }
+
+        let updater = ListAdapterUpdater()
+        adapter = ListAdapter(updater: updater, viewController: self)
+        adapter.collectionView = collectionView
+        adapter.dataSource = datasource
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            let source = self.datasource
+            
+            source.strings = source.strings.filter { !$0.contains("What 8") }
+            source.strings = source.strings.filter { !$0.contains("What 7") }
+            source.strings = source.strings.filter { !$0.contains("What 10") }
+            self.adapter.performUpdates(animated: true, completion: nil)
+        }
+    }
+}
+
+class ThatAdapter: NSObject, ListAdapterDataSource {
+ 
+    var isChild = false
+
     lazy var strings:[String] = {
         var strings = [String]()
         for i in 0..<25 {
@@ -18,37 +45,6 @@ class ViewController: UIViewController {
         return strings
     }()
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        if let flow = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            flow.scrollDirection = isChild ? .horizontal : .vertical
-        }
-
-        let updater = ListAdapterUpdater()
-        adapter = ListAdapter(updater: updater, viewController: self)
-        adapter.collectionView = collectionView
-        adapter.dataSource = self
-
-//        if let flow = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-//            flow.minimumInteritemSpacing = CGFloat(5.0)
-//            flow.minimumLineSpacing = CGFloat(5.0)
-//            collectionView.collectionViewLayout = flow
-//            flow.invalidateLayout()
-//        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            if !self.isChild {
-                self.strings = self.strings.filter { !$0.contains("What 8") }
-                self.strings = self.strings.filter { !$0.contains("What 7") }
-                self.strings = self.strings.filter { !$0.contains("What 10") }
-                self.adapter.performUpdates(animated: true, completion: nil)
-            }
-        }
-    }
-}
-
-extension ViewController: ListAdapterDataSource {
     func objects(for _: ListAdapter) -> [ListDiffable] {
         return strings as [NSString]
     }
@@ -57,10 +53,7 @@ extension ViewController: ListAdapterDataSource {
         if let object = object as? String, object.starts(with: "Child") {
             return OtherSectionController()
         } else {
-            guard let flow = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
-                fatalError()
-            }
-            return flow.scrollDirection == .horizontal ? HorizontalLabelSectionController() : LabelSectionController()
+            return isChild ? HorizontalLabelSectionController() : LabelSectionController()
         }
     }
 
@@ -91,7 +84,6 @@ class LabelSectionController: ListSectionController {
     override init() {
         super.init()
         self.inset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
-        print(self.hash)
     }
     
     override func numberOfItems() -> Int {
@@ -136,10 +128,14 @@ class LabelSectionController: ListSectionController {
 }
 
 class OtherSectionController: ListSectionController {
+    // this is the crazy split... this thing is the adapter for the child collectionView
+    var childAdapter: ListAdapter!
+    var childDatasource = ThatAdapter()
+
     private var object: String?
-    var vc2: ViewController!
 
     override init() {
+        childDatasource.isChild = true
     }
 
     override func numberOfItems() -> Int {
@@ -159,15 +155,16 @@ class OtherSectionController: ListSectionController {
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }
         cell.contentView.backgroundColor = .orange
         
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        vc2 = storyboard.instantiateViewController(withIdentifier: "vc") as? ViewController
-        vc2.isChild = true
-        let _ = vc2.view
-        cell.contentView.addSubview(vc2.view)
-
-        vc2.view.backgroundColor = .blue
-        vc2.view.frame = cell.contentView.bounds
-        vc2.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        let flow = UICollectionViewFlowLayout()
+        flow.scrollDirection = .horizontal
+        let collection = UICollectionView(frame: cell.contentView.bounds, collectionViewLayout: flow)
+        collection.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        cell.contentView.addSubview(collection)
+        let updater = ListAdapterUpdater()
+        childAdapter = ListAdapter(updater: updater, viewController: self.viewController!)
+        childAdapter.collectionView = collection
+        childAdapter.dataSource = childDatasource
+        
         return cell
     }
 
