@@ -135,7 +135,11 @@ class OtherSectionController: ListSectionController {
     private var object: String?
 
     override init() {
+        super.init()
         childDatasource.isChild = true
+        let updater = ListAdapterUpdater()
+        childAdapter = ListAdapter(updater: updater, viewController: self.viewController!)
+        childAdapter.dataSource = childDatasource
     }
 
     override func numberOfItems() -> Int {
@@ -152,19 +156,21 @@ class OtherSectionController: ListSectionController {
             fatalError()
         }
         // um why is it dequeueing from the other guys queue?
-        cell.contentView.subviews.forEach { $0.removeFromSuperview() }
-        cell.contentView.backgroundColor = .orange
-        
-        let flow = UICollectionViewFlowLayout()
-        flow.scrollDirection = .horizontal
-        let collection = UICollectionView(frame: cell.contentView.bounds, collectionViewLayout: flow)
-        collection.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        cell.contentView.addSubview(collection)
-        let updater = ListAdapterUpdater()
-        childAdapter = ListAdapter(updater: updater, viewController: self.viewController!)
-        childAdapter.collectionView = collection
-        childAdapter.dataSource = childDatasource
-        
+        let collectionView: UICollectionView
+
+        if let oldCollectionView = cell.contentView.subviews.first as? UICollectionView {
+            collectionView = oldCollectionView
+        } else {
+            let flow = UICollectionViewFlowLayout()
+            flow.scrollDirection = .horizontal
+            collectionView = UICollectionView(frame: cell.contentView.bounds, collectionViewLayout: flow)
+            cell.contentView.backgroundColor = .orange
+            collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            cell.contentView.addSubview(collectionView)
+        }
+
+        childAdapter.collectionView = collectionView
+
         return cell
     }
 
