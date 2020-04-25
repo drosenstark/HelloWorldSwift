@@ -19,13 +19,32 @@ class ViewController: UIViewController {
         adapter.collectionView = collectionView
         adapter.dataSource = datasource
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.datasource.removeSomeStrings()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            (0..<2).forEach { _ in
+                self.datasource.strings.remove(at: 0)
+            }
             self.datasource.strings.insert("Child", at: 3)
+//            self.datasource.strings.insert("Child", at: 7)
             self.adapter.performUpdates(animated: true, completion: nil)
+            self.removeAThing()
         }
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+//            self.datasource.strings[3] = "Child2"
+//            self.adapter.performUpdates(animated: true, completion: nil)
+//        }
+
     }
     
+    func removeAThing() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.datasource.strings.remove(at: 8)
+            self.adapter.performUpdates(animated: true, completion: nil)
+            if self.datasource.strings.count > 10 {
+                self.removeAThing()
+            }
+        }
+    }
 }
 
 class ThatDataSource: NSObject, ListAdapterDataSource {
@@ -35,10 +54,6 @@ class ThatDataSource: NSObject, ListAdapterDataSource {
         super.init()
     }
  
-    func removeSomeStrings() {
-        strings = self.strings.filter { !$0.contains("What 8") && !$0.contains("What 7") && !$0.contains("What 10") }
-    }
-    
     lazy var strings: [String] = {
         var strings = [String]()
         for i in 0 ..< 25 {
@@ -53,17 +68,13 @@ class ThatDataSource: NSObject, ListAdapterDataSource {
 
     func listAdapter(_: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
         if let object = object as? String, object.starts(with: "Child") {
-            return OtherSectionController()
+            return EmbeddedSectionController()
         } else {
             return isChild ? HorizontalLabelSectionController() : LabelSectionController()
         }
     }
 
-    func emptyView(for _: ListAdapter) -> UIView? {
-        let view = UIView()
-        view.backgroundColor = .orange
-        return view
-    }
+    func emptyView(for _: ListAdapter) -> UIView? { return nil }
 }
 
 class HorizontalLabelSectionController: LabelSectionController {
@@ -128,12 +139,20 @@ class LabelSectionController: ListSectionController {
     }
 }
 
-class OtherSectionController: ListSectionController {
+class EmbeddedSectionController: ListSectionController {
     // this is the crazy split... this thing is the adapter for the child collectionView
     var childAdapter: ListAdapter!
     var childDatasource = ThatDataSource()
 
-    private var object: String?
+    private func removeAThing() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.childDatasource.strings.remove(at: 0)
+            self.childDatasource.strings.remove(at: 0)
+            self.childDatasource.strings.remove(at: 0)
+            self.childDatasource.strings.remove(at: 0)
+            self.childAdapter.performUpdates(animated: true, completion: nil)
+        }
+    }
 
     override init() {
         super.init()
@@ -141,11 +160,8 @@ class OtherSectionController: ListSectionController {
         let updater = ListAdapterUpdater()
         childAdapter = ListAdapter(updater: updater, viewController: viewController!)
         childAdapter.dataSource = childDatasource
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.childDatasource.removeSomeStrings()
-            self.childAdapter.performUpdates(animated: true, completion: nil)
-        }
         inset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        removeAThing()
     }
 
     override func numberOfItems() -> Int {
@@ -163,13 +179,11 @@ class OtherSectionController: ListSectionController {
         }
 
         childAdapter.collectionView = cell.collectionView
-
+        print("how many strings \(childDatasource.strings.count)")
         return cell
     }
 
-    override func didUpdate(to object: Any) {
-        print("did update only on child right? \(object)")
-        self.object = String(describing: object)
+    override func didUpdate(to _: Any) {
     }
 }
 
